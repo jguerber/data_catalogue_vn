@@ -1,1 +1,34 @@
 ## STOC EPS {.unnumbered}
+
+L'objectif est de suivre les populations d'oiseaux communs sur des carrés répartis aléatoirement. Dans chaque carré, sont notés tous les oiseaux vus ou entendus pendant 5 minutes sur 10 points d'écoute visités 1 à 3 fois par an.
+
+### [Protocole](https://www.vigienature.fr/fr/suivi-des-oiseaux-communs-stoc) et saisie
+
+Sur un *carré* de 2x2km tiré aléatoirement proche d'une commune donnée, les observateur.ice.s placent 10 *points* d'écoute dans des habitats représentatifs des habitats du carré. Un à trois *passages* sont effectués chaque année, le plus possible aux mêmes dates parmi trois périodes: mars, avril/début mai, mi-mai/mi-juin. A chaque passage, les observateur.ice.s parcourent les 10 points toujours dans le même ordre, entre 1h et 4h après le lever du soleil. A chaque point d'écoute, pendant 5 minutes, tous les oiseaux vus ou entendus sont notés dans cinq *classes de distances* et l'*habitat* du point est noté selon une classification hiérarchique.
+
+Depuis 2014, les données sont saisies sur Faune-France et versées dans une base de données LPO: les points sont géolocalisés sur Biolovision, leurs coordonnées sont fixes d'année en année.
+
+::: {.callout-note collapse="true" title="Chronologie des types de saisie"}
+
+Avant 2001, les carrés n'étaient pas tirés aléatoirement. Ces données historiques ne sont pas incluses dans les exports.
+
+A partir de 2001, les données saisies étaient stockées à Vigie Nature. La saisie des coordonnées GPS des points n'était pas systématique, les coordonnées GPS fixes sont celles des carrés.
+
+Période de tuilage entre 2014 et 2016 où les données étaient versées à VN et à la LPO, début de la saisie systématique des coordonnées des points.
+
+Le passage de mars est optionnel depuis 2011 et fortement encouragé depuis 2023/2024.
+
+Les données d'information météorologiques, saisies au début du protocole, ne sont plus systématiquement demandées.
+:::
+
+### Structures de données
+
+Trois niveaux d'export de données sont disponibles selon les analyses prévues, par niveau d'aggrégation de données décroissant:
+
+ - données *"au carré"*: par année et par carré, une valeur d'abondance par espèce vue
+ - données *"au point"*: par année et par point, une valeur d'abondance par espèce vue
+ - données *"brutes"* : par année, par point et par passage, une valeur d'abondance par espèce vue dans chaque classe de distance
+
+Ces exports sont construits indépendamment, à partir de la base VN (données 2001-2015) et de la base LPO (données 2016 et plus).
+
+L'export au carré est le plus utilisé et filtré. Il sert notamment au calcul des indicateurs PECBMS avec TRIM (fait par l'EBCC) et au calcul des indicateurs STOC avec la [routine de calcul](https://github.com/Vigie-Nature/indicatorRoutine) à VN.
