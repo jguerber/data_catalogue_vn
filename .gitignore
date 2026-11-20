@@ -8,3 +8,4 @@
 /_site/
 chapters/*_files/
 chapters/*.html
+**/*.quarto_ipynb
