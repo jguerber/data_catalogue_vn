@@ -4,9 +4,9 @@ L'objectif est de suivre les populations d'oiseaux communs sur des carrés répa
 
 ### [Protocole](https://www.vigienature.fr/fr/suivi-des-oiseaux-communs-stoc) et saisie
 
-Sur un *carré* de 2x2km tiré aléatoirement proche d'une commune donnée, les observateur.ice.s placent 10 *points* d'écoute dans des habitats représentatifs des habitats du carré. Un à trois *passages* sont effectués chaque année, le plus possible aux mêmes dates parmi trois périodes: mars, avril/début mai, mi-mai/mi-juin. A chaque passage, les observateur.ice.s parcourent les 10 points toujours dans le même ordre, entre 1h et 4h après le lever du soleil. A chaque point d'écoute, pendant 5 minutes, tous les oiseaux vus ou entendus sont notés dans cinq *classes de distances* et l'*habitat* du point est noté selon une classification hiérarchique.
+Sur un *carré* de 2x2km tiré aléatoirement proche d'une commune donnée, les observateur.ice.s placent 10 *points* d'écoute dans des habitats représentatifs des habitats du carré. Un à trois *passages* sont effectués chaque année, le plus possible aux mêmes dates parmi trois périodes: mars, avril/début mai, mi-mai/mi-juin. A chaque passage, les observateur.ice.s parcourent les 10 points toujours dans le même ordre, entre 1h et 4h après le lever du soleil. A chaque point d'écoute, pendant 5 minutes, *tous* les oiseaux vus ou entendus sont notés dans cinq *classes de distances* et l'*habitat* du point est noté selon une classification hiérarchique.
 
-Depuis 2014, les données sont saisies sur Faune-France et versées dans une base de données LPO: les points sont géolocalisés sur Biolovision, leurs coordonnées sont fixes d'année en année.
+Depuis 2016, les données sont saisies sur Faune-France et versées dans une base de données LPO: les points sont géolocalisés sur Biolovision, leurs coordonnées sont fixes d'année en année.
 
 ::: {.callout-note collapse="true" title="Chronologie des types de saisie"}
 
@@ -16,9 +16,9 @@ A partir de 2001, les données saisies étaient stockées à Vigie Nature. La sa
 
 Période de tuilage entre 2014 et 2016 où les données étaient versées à VN et à la LPO, début de la saisie systématique des coordonnées des points.
 
-Le passage de mars est optionnel depuis 2011 et fortement encouragé depuis 2023/2024.
+Le passage de mars est optionnel depuis 2011 et fortement encouragé depuis 2022/2023.
 
-Les données d'information météorologiques, saisies au début du protocole, ne sont plus systématiquement demandées.
+Les données d'information météorologiques, saisies au début du protocole, ne sont plus demandées.
 :::
 
 ### Structures de données
@@ -31,4 +31,91 @@ Trois niveaux d'export de données sont disponibles selon les analyses prévues,
 
 Ces exports sont construits indépendamment, à partir de la base VN (données 2001-2015) et de la base LPO (données 2016 et plus).
 
-L'export au carré est le plus utilisé et filtré. Il sert notamment au calcul des indicateurs PECBMS avec TRIM (fait par l'EBCC) et au calcul des indicateurs STOC avec la [routine de calcul](https://github.com/Vigie-Nature/indicatorRoutine) à VN.
+L'export au carré est le plus utilisé et filtré. Il sert notamment au calcul des indicateurs PECBMS avec TRIM (fait par l'EBCC). Les données au point servent au calcul des indicateurs STOC avec la [routine de calcul](https://github.com/Vigie-Nature/indicatorRoutine) à VN.
+
+::: {.panel-tabset}
+
+#### Données "au carré"
+
+| Nom du champ | Description | Format attendu^1^ |
+|------------------|------------------------------------| ---------- |
+|`site` | Identifiant unique du carré | string, six chiffres |
+|`species` | Code CRBPO de l'espèce | string, six lettres majuscules |
+|`num_dep` | Département du carré | string, deux chiffres |
+|`abondance` | **abondance** de l'(espèce, carré, année)| nombre |
+|`year` | Année | nombre entre 2001 et 2025 inclus |
+|`longitude` | Longitude (WGS84) du carré | nombre à virgule (format US) |
+|`latitude`	| Latitude (WGS84) du carré | nombre à virgule (format US) |
+|`passage` | Nombre de passages^2^ | string^2^|
+
+^1^: la vérification de la conformité au format est inégalement implémentée selon les champs concernés
+
+^2^: variable catégorielle décrivant les passsages effectués pour le (carré, année)
+
+ - `only_{1|2|prec}`: seulement le passage 1 (avril/mai), 2 (mai/juin) ou précoce (mars)
+ - `1_2`, `prec_1`, `prec_2`: deux passages ont été effectués, les numéros détaillent lesquels exactement
+ - `1_2_3`: les trois passages ont été effectués
+
+
+#### Données "au point"
+
+| Nom du champ | Description | Format attendu |
+|------------------|------------------------------------| ---------- |
+|`carre` | Identifiant unique du carré |string, six chiffres |
+|`point` | Identifiant du point au sein du carré|string, deux chiffres de 01 à 10|
+|`code_espece` | Code CRBPO de l'espèce| string, six lettres majuscules|
+|`abondance`|*abondance* de l'(espèce, point, année) | nombre|
+|`annee`| Année | nombre entre 2001 et 2025|
+|`longitude`|Longitude (WGS84) du point^2^| nombre à virgule (format US)|
+|`latitude`	| Latitude (WGS84) du point^2^ | nombre à virgule (format US) |
+| `habitat` | Code de l'habitat principal du (point, année)| string de deux caractères, format `"[A-E][1-9]"`|
+|`passage` | Nombre de passages^3^ | string^3^|
+
+^1^: la vérification de la conformité au format est inégalement implémentée selon les champs concernés
+
+^2^: ⚠️ Avant 2014, les coordonnées des points sont soit non renseignées soit variables entre années. Utilisation possible, mais avec une attention accrue.
+
+^3^: variable catégorielle décrivant les passsages effectués pour le (carré, année)
+
+ - `only_{1|2|prec}`: seulement le passage 1 (avril/mai), 2 (mai/juin) ou précoce (mars)
+ - `1_2`, `prec_1`, `prec_2`: deux passages ont été effectués, les numéros détaillent lesquels exactement
+ - `1_2_3`: les trois passages ont été effectués
+
+
+
+#### Données "brutes"
+
+| Nom du champ | Description | Format attendu ^1^ |
+|------------------|------------------------------------| ---------- |
+|`carre` | Identifiant unique du carré |string, six chiffres |
+|`point` | Identifiant du point au sein du carré|string, six chiffres puis "P" puis deux chiffres de 01 à 10|
+|`espece` | Code CRBPO de l'espèce| string, six lettres majuscules|
+|`date` | Date de la session | string, AAAA-MM-JJ|
+|`annee`| Année | nombre entre 2001 et 2025|
+|`abondance`|nombre d'individus notés pour l'(espèce, point, annee, passage, classe de distance) | nombre|
+|`distance_contact`|classe de distance de l'observation| string^2^|
+| `habitat` | Code de l'habitat principal du (point, année)| string de deux caractères, format `"[A-E][1-9]"`|
+|`etude` | Programme de suivi associé à l'observateur | string, STOC_EPS ou STOC_ONF |
+|`longitude`|Longitude (WGS84) du point^3^| nombre à virgule (format US)|
+|`latitude`	| Latitude (WGS84) du point^3^ | nombre à virgule (format US) |
+|`passage_calcule` | Passage attribué à la date de la session^4^ | string; 1, 2, precoce ou hors_protocole|
+|`date_retenue` | Est-ce que la date de cette ligne est retenue pour le (carre, passage) ? | OK |
+|`observateur` | Nom de l'observateur ou observatrice | string |
+|`email` | Email chiffré de l'observateur ou observatrice | unknown |
+
+^1^: la vérification de la conformité au format est inégalement implémentée selon les champs concernés
+
+^2^: inf_25m, 25-100m, sup_100m ou transit. Attention: des espèces (rapaces, hirondelles, martinets) sont vues quasiment exclusivement en transit.
+
+^3^: ⚠️ Avant 2014, les coordonnées des points sont soit non renseignées soit variables entre années. Utilisation possible, mais avec une attention accrue.
+
+^4^: ⚠️ Attention aux migrateurs partiels pour lesquels l'information n'est pas la même entre le passage précoce et le passage 2 (a priori ces observations ne font pas partie des mêmes populations)
+
+:::
+
+### Détails des exports
+
+ - a chaque (carre, date), le passage est attribué selon le jour de l'année (mars = précoce, avril/mai = 1, mai/juin = 2). Si deux sessions correspondent au meme passage, seule la date la plus tardive est gardée
+ - conversion des sous-espèces en code espèces et correction taxo pour SYLIBE
+ - à chaque (espece, point, annee, passage), l'abondance est la somme des abondances dans toutes les **classes de distances autorisées pour l'espèce**
+ - à chaque (espece, point, année), l'abondance est le maximum de l'abondance renseignée sur les **passages autorisés pour l'espèce**
